@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ollama Cloud Model Cost Table</title>
+<style>
+  :root {
+    --border: #e5e5e5;
+    --muted: #737373;
+    --header-bg: #fafafa;
+    --striped: #fcfcfc;
+    --accent: #0f766e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #171717;
+    background: #fff;
+  }
+  main { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
+  p.sub { margin: 0 0 1.25rem; color: var(--muted); font-size: .9rem; }
+  .controls { margin: 0 0 .75rem; }
+  #filter {
+    width: 100%; max-width: 320px; padding: .5rem .75rem;
+    border: 1px solid var(--border); border-radius: .5rem; font-size: .9rem;
+  }
+  table {
+    width: 100%; border-collapse: collapse; font-size: .9rem;
+    border: 1px solid var(--border); border-radius: .5rem; overflow: hidden;
+  }
+  th, td { padding: .55rem .75rem; text-align: right; border-bottom: 1px solid var(--border); }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: var(--header-bg); white-space: nowrap; user-select: none; }
+  thead tr:first-child th { border-bottom: 1px solid var(--border); }
+  th.group { text-align: center; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  th.sortable { cursor: pointer; }
+  th.sortable:hover { color: var(--accent); }
+  th .arrow { font-size: .7em; color: var(--accent); }
+  tbody tr:nth-child(even) { background: var(--striped); }
+  tbody tr:hover { background: #f0fdfa; }
+  td.price { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.na { color: #bbb; }
+  a { color: #171717; font-weight: 500; text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .badge {
+    display: inline-block; margin-left: .4rem; padding: 0 .35rem;
+    font-size: .7rem; font-weight: 500; color: #06b6d4; background: #ecfeff;
+    border-radius: .25rem; vertical-align: middle;
+  }
+  .calc {
+    border: 1px solid var(--border); border-radius: .5rem;
+    padding: 1rem 1.25rem; margin: 1.25rem 0 0; background: #fff;
+  }
+  .calc h2 { margin: 0 0 .75rem; font-size: 1rem; }
+  .calc-inputs { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; }
+  .calc-inputs label {
+    display: flex; flex-direction: column; gap: .25rem;
+    font-size: .8rem; color: var(--muted);
+  }
+  .calc-inputs input[type="text"] {
+    width: 8rem; padding: .4rem .6rem; font-size: .9rem;
+    border: 1px solid var(--border); border-radius: .375rem;
+  }
+  .calc-rate {
+    border: none; padding: 0 0 .35rem; margin: 0;
+    display: flex; gap: .9rem; align-items: center; font-size: .85rem;
+  }
+  .calc-rate label {
+    flex-direction: row !important; align-items: center; gap: .3rem;
+    color: #171717; cursor: pointer;
+  }
+  .calc-hint { margin: .6rem 0 0; font-size: .75rem; color: var(--muted); }
+  .calc-error { margin: .75rem 0 0; font-size: .85rem; color: #b91c1c; }
+  .calc-summary { margin: .75rem 0 0; font-size: .85rem; }
+  .calc-summary strong { color: var(--accent); }
+  #calc-results table { margin-top: .5rem; }
+  td.best { color: var(--accent); font-weight: 600; }
+  footer { margin-top: 1rem; color: var(--muted); font-size: .8rem; }
+  footer code { background: var(--header-bg); padding: .1rem .3rem; border-radius: .25rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ollama Cloud Model Cost Table</h1>
+  <p class="sub">
+    Prices per 1M tokens for Ollama <em>cloud</em> models (run with the
+    <code>:cloud</code> tag, e.g. <code>ollama run deepseek-v4.1-flash:cloud</code>).
+    17 models, sorted newest first. Click a column header to sort.
+  </p>
+  <div class="controls">
+    <input id="filter" type="search" placeholder="Filter models&hellip;" autofocus>
+  </div>
+  <table id="costs">
+    <thead>
+      <tr>
+        <th rowspan="2" class="sortable" data-col="model">Model <span class="arrow"></span></th>
+        <th colspan="3" class="group">Peak ($ / 1M tokens)</th>
+        <th colspan="3" class="group">Off-Peak ($ / 1M tokens)</th>
+        <th rowspan="2" class="sortable" data-col="context">Context <span class="arrow"></span></th>
+        <th rowspan="2" class="sortable" data-col="size">Size <span class="arrow"></span></th>
+      </tr>
+      <tr>
+        <th class="sortable" data-col="peak-input">Input <span class="arrow"></span></th>
+        <th class="sortable" data-col="peak-cached">Cached <span class="arrow"></span></th>
+        <th class="sortable" data-col="peak-output">Output <span class="arrow"></span></th>
+        <th class="sortable" data-col="off-input">Input <span class="arrow"></span></th>
+        <th class="sortable" data-col="off-cached">Cached <span class="arrow"></span></th>
+        <th class="sortable" data-col="off-output">Output <span class="arrow"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-model="deepseek-v4.1-flash">
+        <td data-col="model"><a href="https://ollama.com/library/deepseek-v4.1-flash">deepseek-v4.1-flash</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.3" class="price">$0.30</td>
+        <td data-col="peak-cached" data-sort="0.006" class="price">$0.006</td>
+        <td data-col="peak-output" data-sort="1.2" class="price">$1.20</td>
+        <td data-col="off-input"   data-sort="0.15" class="price">$0.15</td>
+        <td data-col="off-cached"  data-sort="0.003" class="price">$0.003</td>
+        <td data-col="off-output"  data-sort="0.6" class="price">$0.60</td>
+        <td data-col="context" data-sort="1000000.0">1M tokens</td>
+        <td data-col="size"    data-sort="763000000000.0">763B parameters</td>
+      </tr>
+      <tr data-model="glm-5.3-flash">
+        <td data-col="model"><a href="https://ollama.com/library/glm-5.3-flash">glm-5.3-flash</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
+        <td data-col="peak-cached" data-sort="0.03" class="price">$0.03</td>
+        <td data-col="peak-output" data-sort="0.5" class="price">$0.50</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="1000000.0">1M tokens</td>
+        <td data-col="size"    data-sort="321000000000.0">321B parameters</td>
+      </tr>
+      <tr data-model="glm-5.3">
+        <td data-col="model"><a href="https://ollama.com/library/glm-5.3">glm-5.3</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="1.4" class="price">$1.40</td>
+        <td data-col="peak-cached" data-sort="0.26" class="price">$0.26</td>
+        <td data-col="peak-output" data-sort="4.4" class="price">$4.40</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="1000000.0">1M tokens</td>
+        <td data-col="size"    data-sort="753000000000.0">753B parameters</td>
+      </tr>
+      <tr data-model="kimi-k3">
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k3">kimi-k3</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="3.0" class="price">$3.00</td>
+        <td data-col="peak-cached" data-sort="0.3" class="price">$0.30</td>
+        <td data-col="peak-output" data-sort="15.0" class="price">$15.00</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="1000000.0">1M tokens</td>
+        <td data-col="size"    data-sort="">2.81T parameters</td>
+      </tr>
+      <tr data-model="glm-5.2">
+        <td data-col="model"><a href="https://ollama.com/library/glm-5.2">glm-5.2</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="1.4" class="price">$1.40</td>
+        <td data-col="peak-cached" data-sort="0.26" class="price">$0.26</td>
+        <td data-col="peak-output" data-sort="4.4" class="price">$4.40</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="976000.0">976K tokens</td>
+        <td data-col="size"    data-sort="756000000000.0">756B parameters</td>
+      </tr>
+      <tr data-model="kimi-k2.7-code">
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k2.7-code">kimi-k2.7-code</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.95" class="price">$0.95</td>
+        <td data-col="peak-cached" data-sort="0.19" class="price">$0.19</td>
+        <td data-col="peak-output" data-sort="4.0" class="price">$4.00</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="256000.0">256K tokens</td>
+        <td data-col="size"    data-sort="">1.04T parameters</td>
+      </tr>
+      <tr data-model="nemotron-3-ultra">
+        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-ultra">nemotron-3-ultra</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.1" class="price">$0.10</td>
+        <td data-col="peak-cached" data-sort="0.1" class="price">$0.10</td>
+        <td data-col="peak-output" data-sort="3.0" class="price">$3.00</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="256000.0">256K tokens</td>
+        <td data-col="size"    data-sort="550000000000.0">550B parameters</td>
+      </tr>
+      <tr data-model="minimax-m3">
+        <td data-col="model"><a href="https://ollama.com/library/minimax-m3">minimax-m3</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.6" class="price">$0.60</td>
+        <td data-col="peak-cached" data-sort="0.12" class="price">$0.12</td>
+        <td data-col="peak-output" data-sort="2.4" class="price">$2.40</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="512000.0">512K tokens</td>
+        <td data-col="size"    data-sort="">&mdash;</td>
+      </tr>
+      <tr data-model="deepseek-v4-pro">
+        <td data-col="model"><a href="https://ollama.com/library/deepseek-v4-pro">deepseek-v4-pro</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="1.32" class="price">$1.32</td>
+        <td data-col="peak-cached" data-sort="0.044" class="price">$0.044</td>
+        <td data-col="peak-output" data-sort="3.96" class="price">$3.96</td>
+        <td data-col="off-input"   data-sort="0.66" class="price">$0.66</td>
+        <td data-col="off-cached"  data-sort="0.022" class="price">$0.022</td>
+        <td data-col="off-output"  data-sort="1.98" class="price">$1.98</td>
+        <td data-col="context" data-sort="1000000.0">1M tokens</td>
+        <td data-col="size"    data-sort="">1.65T parameters</td>
+      </tr>
+      <tr data-model="kimi-k2.6">
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k2.6">kimi-k2.6</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.95" class="price">$0.95</td>
+        <td data-col="peak-cached" data-sort="0.16" class="price">$0.16</td>
+        <td data-col="peak-output" data-sort="4.0" class="price">$4.00</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="256000.0">256K tokens</td>
+        <td data-col="size"    data-sort="">1.04T parameters</td>
+      </tr>
+      <tr data-model="minimax-m2.7">
+        <td data-col="model"><a href="https://ollama.com/library/minimax-m2.7">minimax-m2.7</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.3" class="price">$0.30</td>
+        <td data-col="peak-cached" data-sort="0.06" class="price">$0.06</td>
+        <td data-col="peak-output" data-sort="1.2" class="price">$1.20</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="200000.0">200K tokens</td>
+        <td data-col="size"    data-sort="229000000000.0">229B parameters</td>
+      </tr>
+      <tr data-model="gemma4">
+        <td data-col="model"><a href="https://ollama.com/library/gemma4">gemma4</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.14" class="price">$0.14</td>
+        <td data-col="peak-cached" data-sort="0.05" class="price">$0.05</td>
+        <td data-col="peak-output" data-sort="0.4" class="price">$0.40</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="256000.0">256K tokens</td>
+        <td data-col="size"    data-sort="32700000000.000004">32.7B parameters</td>
+      </tr>
+      <tr data-model="nemotron-3-super">
+        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-super">nemotron-3-super</a><span class="badge">cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.015" class="price">$0.015</td>
+        <td data-col="peak-cached" data-sort="0.015" class="price">$0.015</td>
+        <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="256000.0">256K tokens</td>
+        <td data-col="size"    data-sort="120000000000.0">120B parameters</td>
+      </tr>
+      <tr data-model="nemotron-3-nano:30b-cloud">
+        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-nano:30b-cloud">nemotron-3-nano:30b-cloud</a><span class="badge">30b-cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.06" class="price">$0.06</td>
+        <td data-col="peak-cached" data-sort="" class="price na">&mdash;</td>
+        <td data-col="peak-output" data-sort="0.24" class="price">$0.24</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="1000000.0">1M tokens</td>
+        <td data-col="size"    data-sort="30000000000.0">30B parameters</td>
+      </tr>
+      <tr data-model="mistral-large-3:675b-cloud">
+        <td data-col="model"><a href="https://ollama.com/library/mistral-large-3:675b-cloud">mistral-large-3:675b-cloud</a><span class="badge">675b-cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.5" class="price">$0.50</td>
+        <td data-col="peak-cached" data-sort="" class="price na">&mdash;</td>
+        <td data-col="peak-output" data-sort="1.5" class="price">$1.50</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="256000.0">256K tokens</td>
+        <td data-col="size"    data-sort="675000000000.0">675B parameters</td>
+      </tr>
+      <tr data-model="gpt-oss:120b-cloud">
+        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:120b-cloud">gpt-oss:120b-cloud</a><span class="badge">120b-cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
+        <td data-col="peak-cached" data-sort="0.014" class="price">$0.014</td>
+        <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="128000.0">128K tokens</td>
+        <td data-col="size"    data-sort="120000000000.0">120B parameters</td>
+      </tr>
+      <tr data-model="gpt-oss:20b-cloud">
+        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:20b-cloud">gpt-oss:20b-cloud</a><span class="badge">20b-cloud</span></td>
+        <td data-col="peak-input"  data-sort="0.07" class="price">$0.07</td>
+        <td data-col="peak-cached" data-sort="0.035" class="price">$0.035</td>
+        <td data-col="peak-output" data-sort="0.3" class="price">$0.30</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="128000.0">128K tokens</td>
+        <td data-col="size"    data-sort="20000000000.0">20B parameters</td>
+      </tr>
+    </tbody>
+  </table>
+  <section class="calc" id="calc">
+    <h2>Cost calculator</h2>
+    <div class="calc-inputs">
+      <label>Input tokens
+        <input id="calc-input" type="text" value="1M" inputmode="decimal">
+      </label>
+      <label>Cached input tokens
+        <input id="calc-cached" type="text" value="0" inputmode="decimal">
+      </label>
+      <label>Output tokens
+        <input id="calc-output" type="text" value="1M" inputmode="decimal">
+      </label>
+      <fieldset class="calc-rate">
+        <label><input type="radio" name="calc-rate" value="peak" checked> Peak</label>
+        <label><input type="radio" name="calc-rate" value="off"> Off-Peak</label>
+        <label><input type="radio" name="calc-rate" value="both"> Both</label>
+      </fieldset>
+    </div>
+    <p class="calc-hint">Amounts accept <code>K</code> / <code>M</code> / <code>G</code> suffixes and commas, e.g. <code>2M</code> or <code>500,000</code>.</p>
+    <div id="calc-results"></div>
+  </section>
+  <footer>
+    Generated 2026-10-04 01:32 UTC by <code>generate.py</code> &middot; Sources:
+    <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
+  </footer>
+</main>
+<script type="application/json" id="model-data">[{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:120b-cloud","url":"https://ollama.com/library/gpt-oss:120b-cloud","peak":{"input":0.15,"cached":0.014,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:20b-cloud","url":"https://ollama.com/library/gpt-oss:20b-cloud","peak":{"input":0.07,"cached":0.035,"output":0.3},"off":{"input":null,"cached":null,"output":null}}]</script>
+<script>
+const tbody = document.querySelector('#costs tbody');
+const rows = () => Array.from(tbody.querySelectorAll('tr'));
+
+function cellValue(row, col) {
+  const td = row.querySelector('td[data-col="' + col + '"]');
+  if (!td) return null;
+  if (td.dataset.sort) return parseFloat(td.dataset.sort);
+  const t = td.textContent.trim().toLowerCase();
+  return (t === '' || t === '—') ? null : t;
+}
+
+function compare(va, vb, asc) {
+  if (va === null) return vb === null ? 0 : 1;  // missing values sort last
+  if (vb === null) return -1;
+  const cmp = (typeof va === 'number' && typeof vb === 'number')
+    ? va - vb : String(va).localeCompare(String(vb));
+  return asc ? cmp : -cmp;
+}
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    const asc = th.dataset.dir !== 'asc';
+    document.querySelectorAll('th.sortable').forEach(t => {
+      t.dataset.dir = ''; t.querySelector('.arrow').textContent = '';
+    });
+    th.dataset.dir = asc ? 'asc' : 'desc';
+    th.querySelector('.arrow').textContent = asc ? '\u25B2' : '\u25BC';
+    rows().sort((a, b) => compare(cellValue(a, col), cellValue(b, col), asc))
+      .forEach(r => tbody.appendChild(r));
+  });
+});
+
+document.getElementById('filter').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  rows().forEach(r => {
+    r.style.display = r.dataset.model.includes(q) ? '' : 'none';
+  });
+});
+
+// ---- Cost calculator ----
+const MODELS = JSON.parse(document.getElementById('model-data').textContent);
+const calcInputs = ['calc-input', 'calc-cached', 'calc-output']
+  .map(id => document.getElementById(id));
+
+function parseTokens(s) {
+  s = String(s).trim().toLowerCase().replace(/[,\s_]/g, '');
+  const m = s.match(/^([0-9]*\.?[0-9]+)([kmg])?$/);
+  if (!m) return NaN;
+  return parseFloat(m[1]) * ({k: 1e3, m: 1e6, g: 1e9}[m[2]] || 1);
+}
+
+function money(x) {
+  const digits = x >= 100 ? 2 : (x >= 1 ? 3 : 4);
+  return '$' + x.toLocaleString('en-US', {
+    minimumFractionDigits: digits, maximumFractionDigits: digits
+  });
+}
+
+function costFor(rates, amounts) {
+  let total = 0;
+  for (const [label, amt] of amounts) {
+    if (amt <= 0) continue;
+    const price = rates[label];
+    if (price === null || price === undefined) return null;  // price unknown
+    total += amt / 1e6 * price;
+  }
+  return total;
+}
+
+function updateCalc() {
+  const amounts = [
+    ['input', parseTokens(calcInputs[0].value)],
+    ['cached', parseTokens(calcInputs[1].value)],
+    ['output', parseTokens(calcInputs[2].value)],
+  ];
+  const mode = document.querySelector('input[name="calc-rate"]:checked').value;
+  const out = document.getElementById('calc-results');
+
+  if (amounts.some(([, a]) => isNaN(a) || a < 0)) {
+    out.innerHTML = '<p class="calc-error">Enter valid token amounts ' +
+      '(e.g. 2M or 500,000).</p>';
+    return;
+  }
+
+  const results = MODELS.map(m => ({
+    name: m.name, url: m.url,
+    peak: costFor(m.peak, amounts),
+    off: costFor(m.off, amounts),
+  }));
+  const key = mode === 'off' ? 'off' : 'peak';
+  results.sort((a, b) => {
+    const va = a[key] === null ? Infinity : a[key];
+    const vb = b[key] === null ? Infinity : b[key];
+    return va - vb;
+  });
+
+  const bestPeak = Math.min(...results.map(r => r.peak === null ? Infinity : r.peak));
+  const bestOff = Math.min(...results.map(r => r.off === null ? Infinity : r.off));
+  const showPeak = mode !== 'off', showOff = mode !== 'peak';
+
+  let html = '<table><thead><tr><th>#</th><th>Model</th>' +
+    (showPeak ? '<th>Peak cost</th>' : '') +
+    (showOff ? '<th>Off-Peak cost</th>' : '') +
+    '</tr></thead><tbody>';
+  results.forEach((r, i) => {
+    const cell = (cost, best) =>
+      cost === null
+        ? '<td class="price na">&mdash;</td>'
+        : '<td class="price' + (cost === best ? ' best' : '') + '">' + money(cost) + '</td>';
+    html += '<tr><td>' + (i + 1) + '</td>' +
+      '<td><a href="' + r.url + '">' + r.name + '</a></td>' +
+      (showPeak ? cell(r.peak, bestPeak) : '') +
+      (showOff ? cell(r.off, bestOff) : '') +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+
+  const cheapest = results.find(r => r[key] !== null);
+  if (cheapest) {
+    html += '<p class="calc-summary">Cheapest: <strong>' + cheapest.name +
+      '</strong> at <strong>' + money(cheapest[key]) + '</strong> (' +
+      (key === 'off' ? 'off-peak' : 'peak') + ' rates)</p>';
+  }
+  out.innerHTML = html;
+}
+
+calcInputs.forEach(i => i.addEventListener('input', updateCalc));
+document.querySelectorAll('input[name="calc-rate"]')
+  .forEach(r => r.addEventListener('change', updateCalc));
+updateCalc();
+</script>
+</body>
+</html>
