@@ -112,6 +112,16 @@
   .calc-summary { margin: .75rem 0 0; font-size: .85rem; }
   .calc-summary strong { color: var(--accent); }
   #calc-results table { margin-top: .5rem; }
+  .chart {
+    border: 1px solid var(--border); border-radius: .5rem;
+    padding: 1rem 1.25rem; margin: 1.25rem 0 0; background: #fff;
+  }
+  .chart h2 { margin: 0 0 .5rem; font-size: 1rem; }
+  .chart svg { width: 100%; height: auto; display: block; }
+  .chart .axis { font-size: 11px; fill: #737373; }
+  .chart .grid { stroke: #eee; stroke-width: 1; }
+  .chart .bubble:hover { fill-opacity: .8; }
+  .chart-caption { margin: .5rem 0 0; font-size: .75rem; color: var(--muted); }
   td.best { color: var(--accent); font-weight: 600; }
   footer { margin-top: 1rem; color: var(--muted); font-size: .8rem; }
   footer code { background: var(--header-bg); padding: .1rem .3rem; border-radius: .25rem; }
@@ -354,6 +364,11 @@
       </tr>
     </tbody>
   </table>
+  <section class="chart" id="chart">
+    <h2>Context window vs. output cost</h2>
+    <div id="chartplot"></div>
+    <p class="chart-caption">Bubble size = parameter count. Peak output rates, log scales. Hover for details, click a bubble to open the model page.</p>
+  </section>
   <section class="calc" id="calc">
     <h2>Cost calculator</h2>
     <div class="calc-inputs">
@@ -387,11 +402,11 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-04 02:20 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-04 09:52 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
-<script type="application/json" id="model-data">[{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","context":256000.0,"peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","context":1000000.0,"peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","context":256000.0,"peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:120b-cloud","url":"https://ollama.com/library/gpt-oss:120b-cloud","context":128000.0,"peak":{"input":0.15,"cached":0.014,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:20b-cloud","url":"https://ollama.com/library/gpt-oss:20b-cloud","context":128000.0,"peak":{"input":0.07,"cached":0.035,"output":0.3},"off":{"input":null,"cached":null,"output":null}}]</script>
+<script type="application/json" id="model-data">[{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"size":763000000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"size":321000000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"size":753000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"size":2810000000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"size":756000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"size":550000000000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"size":null,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"size":1650000000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"size":229000000000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"size":32700000000.000004,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","context":256000.0,"size":120000000000.0,"peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","context":1000000.0,"size":30000000000.0,"peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","context":256000.0,"size":675000000000.0,"peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:120b-cloud","url":"https://ollama.com/library/gpt-oss:120b-cloud","context":128000.0,"size":120000000000.0,"peak":{"input":0.15,"cached":0.014,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:20b-cloud","url":"https://ollama.com/library/gpt-oss:20b-cloud","context":128000.0,"size":20000000000.0,"peak":{"input":0.07,"cached":0.035,"output":0.3},"off":{"input":null,"cached":null,"output":null}}]</script>
 <script>
 const tbody = document.querySelector('#costs tbody');
 const rows = () => Array.from(tbody.querySelectorAll('tr'));
@@ -652,6 +667,66 @@ document.querySelectorAll('.calc-presets [data-preset]').forEach(btn =>
     updateCalc();
   }));
 document.getElementById('calc-export').addEventListener('click', exportCsv);
+
+// ---- Context / cost / size bubble chart ----
+function fmtTok(v) { return v >= 1e6 ? (v / 1e6) + 'M' : (v / 1e3) + 'K'; }
+function fmtParams(v) {
+  if (v >= 1e12) return parseFloat((v / 1e12).toFixed(2)) + 'T';
+  if (v >= 1e9) return parseFloat((v / 1e9).toFixed(1)) + 'B';
+  return v + '';
+}
+
+function renderChart() {
+  const el = document.getElementById('chartplot');
+  const data = MODELS.filter(m =>
+    m.context && m.size && m.peak && m.peak.output !== null && m.peak.output !== undefined);
+  if (!data.length) return;
+
+  const W = 920, H = 420, mL = 64, mR = 24, mT = 16, mB = 52;
+  const xs = data.map(d => Math.log10(d.context));
+  const ys = data.map(d => Math.log10(d.peak.output));
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = Math.min(...ys), yMax = Math.max(...ys);
+  const padX = (xMax - xMin) * 0.07 || 0.1;
+  const padY = (yMax - yMin) * 0.10 || 0.1;
+  const X = v => mL + (Math.log10(v) - xMin + padX) / (xMax - xMin + 2 * padX) * (W - mL - mR);
+  const Y = v => H - mB - (Math.log10(v) - yMin + padY) / (yMax - yMin + 2 * padY) * (H - mT - mB);
+  const pMin = Math.min(...data.map(d => d.size));
+  const pMax = Math.max(...data.map(d => d.size));
+  const R = p => 7 + 17 * Math.sqrt((p - pMin) / (pMax - pMin || 1));
+
+  const ctxTicks = [128000, 200000, 256000, 512000, 1000000]
+    .filter(v => Math.log10(v) >= xMin - padX && Math.log10(v) <= xMax + padX);
+  const priceTicks = [0.1, 0.3, 1, 3, 10]
+    .filter(v => Math.log10(v) >= yMin - padY && Math.log10(v) <= yMax + padY);
+
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" ' +
+    'aria-label="Scatter of context window vs output cost">';
+  ctxTicks.forEach(t => {
+    s += '<line class="grid" x1="' + X(t) + '" y1="' + mT + '" x2="' + X(t) + '" y2="' + (H - mB) + '"/>' +
+      '<text class="axis" x="' + X(t) + '" y="' + (H - mB + 18) + '" text-anchor="middle">' + fmtTok(t) + '</text>';
+  });
+  priceTicks.forEach(t => {
+    s += '<line class="grid" x1="' + mL + '" y1="' + Y(t) + '" x2="' + (W - mR) + '" y2="' + Y(t) + '"/>' +
+      '<text class="axis" x="' + (mL - 8) + '" y="' + (Y(t) + 4) + '" text-anchor="end">$' + t + '</text>';
+  });
+  s += '<text class="axis" x="' + (mL + (W - mL - mR) / 2) + '" y="' + (H - 8) +
+    '" text-anchor="middle" style="font-size:12px">Context window (tokens)</text>' +
+    '<text class="axis" transform="rotate(-90 14 ' + (mT + (H - mT - mB) / 2) + ')" x="14" y="' +
+    (mT + (H - mT - mB) / 2) + '" text-anchor="middle" style="font-size:12px">Output cost ($ / 1M tokens, peak)</text>';
+  data.forEach(d => {
+    s += '<a href="' + d.url + '"><circle class="bubble" cx="' + X(d.context).toFixed(1) +
+      '" cy="' + Y(d.peak.output).toFixed(1) + '" r="' + R(d.size).toFixed(1) +
+      '" fill="#0f766e" fill-opacity="0.45" stroke="#0f766e">' +
+      '<title>' + d.name + '  ·  ' + fmtTok(d.context) + ' context  ·  ' +
+      fmtParams(d.size) + ' params  ·  $' + d.peak.output + '/1M output</title>' +
+      '</circle></a>';
+  });
+  s += '</svg>';
+  el.innerHTML = s;
+}
+renderChart();
+
 loadCalcState();
 updateCalc();
 
