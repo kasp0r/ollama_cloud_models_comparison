@@ -44,6 +44,19 @@
   tbody tr:hover { background: #f0fdfa; }
   td.price { font-variant-numeric: tabular-nums; white-space: nowrap; }
   td.na { color: #bbb; }
+  td.best { color: var(--accent); font-weight: 600; background: #f0fdfa; }
+  .cap {
+    display: inline-block; margin-left: .3rem; padding: 0 .3rem;
+    font-size: .68rem; font-weight: 500; color: #6366f1; background: #eef2ff;
+    border-radius: .25rem; vertical-align: middle;
+  }
+  .copybtn {
+    margin-left: .3rem; padding: 0 .3rem; border: 1px solid var(--border);
+    border-radius: .25rem; background: #fff; color: var(--muted);
+    font-size: .75rem; line-height: 1.3; cursor: pointer; vertical-align: middle;
+  }
+  .copybtn:hover { color: var(--accent); border-color: var(--accent); }
+  .copybtn.copied { color: var(--accent); border-color: var(--accent); }
   a { color: #171717; font-weight: 500; text-decoration: none; border-bottom: 1px solid transparent; }
   a:hover { color: var(--accent); border-bottom-color: var(--accent); }
   .badge {
@@ -100,6 +113,7 @@
         <th rowspan="2" class="sortable" data-col="model">Model <span class="arrow"></span></th>
         <th colspan="3" class="group">Peak ($ / 1M tokens)</th>
         <th colspan="3" class="group">Off-Peak ($ / 1M tokens)</th>
+        <th rowspan="2" class="sortable" data-col="savings" title="Discount of Off-Peak vs Peak rates; a range when it differs across input/cached/output">Savings <span class="arrow"></span></th>
         <th rowspan="2" class="sortable" data-col="context">Context <span class="arrow"></span></th>
         <th rowspan="2" class="sortable" data-col="size">Size <span class="arrow"></span></th>
       </tr>
@@ -114,189 +128,206 @@
     </thead>
     <tbody>
       <tr data-model="deepseek-v4.1-flash">
-        <td data-col="model"><a href="https://ollama.com/library/deepseek-v4.1-flash">deepseek-v4.1-flash</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/deepseek-v4.1-flash">deepseek-v4.1-flash</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run deepseek-v4.1-flash:cloud" title="Copy: ollama run deepseek-v4.1-flash:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.3" class="price">$0.30</td>
-        <td data-col="peak-cached" data-sort="0.006" class="price">$0.006</td>
+        <td data-col="peak-cached" data-sort="0.006" class="price best">$0.006</td>
         <td data-col="peak-output" data-sort="1.2" class="price">$1.20</td>
-        <td data-col="off-input"   data-sort="0.15" class="price">$0.15</td>
-        <td data-col="off-cached"  data-sort="0.003" class="price">$0.003</td>
-        <td data-col="off-output"  data-sort="0.6" class="price">$0.60</td>
+        <td data-col="off-input"   data-sort="0.15" class="price best">$0.15</td>
+        <td data-col="off-cached"  data-sort="0.003" class="price best">$0.003</td>
+        <td data-col="off-output"  data-sort="0.6" class="price best">$0.60</td>
+        <td data-col="savings" data-sort="50.0" class="price">&minus;50%</td>
         <td data-col="context" data-sort="1000000.0">1M tokens</td>
         <td data-col="size"    data-sort="763000000000.0">763B parameters</td>
       </tr>
       <tr data-model="glm-5.3-flash">
-        <td data-col="model"><a href="https://ollama.com/library/glm-5.3-flash">glm-5.3-flash</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/glm-5.3-flash">glm-5.3-flash</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run glm-5.3-flash:cloud" title="Copy: ollama run glm-5.3-flash:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
         <td data-col="peak-cached" data-sort="0.03" class="price">$0.03</td>
         <td data-col="peak-output" data-sort="0.5" class="price">$0.50</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="1000000.0">1M tokens</td>
         <td data-col="size"    data-sort="321000000000.0">321B parameters</td>
       </tr>
       <tr data-model="glm-5.3">
-        <td data-col="model"><a href="https://ollama.com/library/glm-5.3">glm-5.3</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/glm-5.3">glm-5.3</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run glm-5.3:cloud" title="Copy: ollama run glm-5.3:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="1.4" class="price">$1.40</td>
         <td data-col="peak-cached" data-sort="0.26" class="price">$0.26</td>
         <td data-col="peak-output" data-sort="4.4" class="price">$4.40</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="1000000.0">1M tokens</td>
         <td data-col="size"    data-sort="753000000000.0">753B parameters</td>
       </tr>
       <tr data-model="kimi-k3">
-        <td data-col="model"><a href="https://ollama.com/library/kimi-k3">kimi-k3</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k3">kimi-k3</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run kimi-k3:cloud" title="Copy: ollama run kimi-k3:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="3.0" class="price">$3.00</td>
         <td data-col="peak-cached" data-sort="0.3" class="price">$0.30</td>
         <td data-col="peak-output" data-sort="15.0" class="price">$15.00</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="1000000.0">1M tokens</td>
         <td data-col="size"    data-sort="">2.81T parameters</td>
       </tr>
       <tr data-model="glm-5.2">
-        <td data-col="model"><a href="https://ollama.com/library/glm-5.2">glm-5.2</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/glm-5.2">glm-5.2</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run glm-5.2:cloud" title="Copy: ollama run glm-5.2:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="1.4" class="price">$1.40</td>
         <td data-col="peak-cached" data-sort="0.26" class="price">$0.26</td>
         <td data-col="peak-output" data-sort="4.4" class="price">$4.40</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="976000.0">976K tokens</td>
         <td data-col="size"    data-sort="756000000000.0">756B parameters</td>
       </tr>
       <tr data-model="kimi-k2.7-code">
-        <td data-col="model"><a href="https://ollama.com/library/kimi-k2.7-code">kimi-k2.7-code</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k2.7-code">kimi-k2.7-code</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run kimi-k2.7-code:cloud" title="Copy: ollama run kimi-k2.7-code:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.95" class="price">$0.95</td>
         <td data-col="peak-cached" data-sort="0.19" class="price">$0.19</td>
         <td data-col="peak-output" data-sort="4.0" class="price">$4.00</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="256000.0">256K tokens</td>
         <td data-col="size"    data-sort="">1.04T parameters</td>
       </tr>
       <tr data-model="nemotron-3-ultra">
-        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-ultra">nemotron-3-ultra</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-ultra">nemotron-3-ultra</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run nemotron-3-ultra:cloud" title="Copy: ollama run nemotron-3-ultra:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.1" class="price">$0.10</td>
         <td data-col="peak-cached" data-sort="0.1" class="price">$0.10</td>
         <td data-col="peak-output" data-sort="3.0" class="price">$3.00</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="256000.0">256K tokens</td>
         <td data-col="size"    data-sort="550000000000.0">550B parameters</td>
       </tr>
       <tr data-model="minimax-m3">
-        <td data-col="model"><a href="https://ollama.com/library/minimax-m3">minimax-m3</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/minimax-m3">minimax-m3</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run minimax-m3:cloud" title="Copy: ollama run minimax-m3:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.6" class="price">$0.60</td>
         <td data-col="peak-cached" data-sort="0.12" class="price">$0.12</td>
         <td data-col="peak-output" data-sort="2.4" class="price">$2.40</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="512000.0">512K tokens</td>
         <td data-col="size"    data-sort="">&mdash;</td>
       </tr>
       <tr data-model="deepseek-v4-pro">
-        <td data-col="model"><a href="https://ollama.com/library/deepseek-v4-pro">deepseek-v4-pro</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/deepseek-v4-pro">deepseek-v4-pro</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run deepseek-v4-pro:cloud" title="Copy: ollama run deepseek-v4-pro:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="1.32" class="price">$1.32</td>
         <td data-col="peak-cached" data-sort="0.044" class="price">$0.044</td>
         <td data-col="peak-output" data-sort="3.96" class="price">$3.96</td>
         <td data-col="off-input"   data-sort="0.66" class="price">$0.66</td>
         <td data-col="off-cached"  data-sort="0.022" class="price">$0.022</td>
         <td data-col="off-output"  data-sort="1.98" class="price">$1.98</td>
+        <td data-col="savings" data-sort="50.0" class="price">&minus;50%</td>
         <td data-col="context" data-sort="1000000.0">1M tokens</td>
         <td data-col="size"    data-sort="">1.65T parameters</td>
       </tr>
       <tr data-model="kimi-k2.6">
-        <td data-col="model"><a href="https://ollama.com/library/kimi-k2.6">kimi-k2.6</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k2.6">kimi-k2.6</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run kimi-k2.6:cloud" title="Copy: ollama run kimi-k2.6:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.95" class="price">$0.95</td>
         <td data-col="peak-cached" data-sort="0.16" class="price">$0.16</td>
         <td data-col="peak-output" data-sort="4.0" class="price">$4.00</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="256000.0">256K tokens</td>
         <td data-col="size"    data-sort="">1.04T parameters</td>
       </tr>
       <tr data-model="minimax-m2.7">
-        <td data-col="model"><a href="https://ollama.com/library/minimax-m2.7">minimax-m2.7</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/minimax-m2.7">minimax-m2.7</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run minimax-m2.7:cloud" title="Copy: ollama run minimax-m2.7:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.3" class="price">$0.30</td>
         <td data-col="peak-cached" data-sort="0.06" class="price">$0.06</td>
         <td data-col="peak-output" data-sort="1.2" class="price">$1.20</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="200000.0">200K tokens</td>
         <td data-col="size"    data-sort="229000000000.0">229B parameters</td>
       </tr>
       <tr data-model="gemma4">
-        <td data-col="model"><a href="https://ollama.com/library/gemma4">gemma4</a><span class="badge">cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/gemma4">gemma4</a><span class="badge">cloud</span><span class="cap">audio</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run gemma4:cloud" title="Copy: ollama run gemma4:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.14" class="price">$0.14</td>
         <td data-col="peak-cached" data-sort="0.05" class="price">$0.05</td>
         <td data-col="peak-output" data-sort="0.4" class="price">$0.40</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="256000.0">256K tokens</td>
         <td data-col="size"    data-sort="32700000000.000004">32.7B parameters</td>
       </tr>
       <tr data-model="nemotron-3-super">
-        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-super">nemotron-3-super</a><span class="badge">cloud</span></td>
-        <td data-col="peak-input"  data-sort="0.015" class="price">$0.015</td>
+        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-super">nemotron-3-super</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run nemotron-3-super:cloud" title="Copy: ollama run nemotron-3-super:cloud">&#x29C9;</button></td>
+        <td data-col="peak-input"  data-sort="0.015" class="price best">$0.015</td>
         <td data-col="peak-cached" data-sort="0.015" class="price">$0.015</td>
         <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="256000.0">256K tokens</td>
         <td data-col="size"    data-sort="120000000000.0">120B parameters</td>
       </tr>
       <tr data-model="nemotron-3-nano:30b-cloud">
-        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-nano:30b-cloud">nemotron-3-nano:30b-cloud</a><span class="badge">30b-cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-nano:30b-cloud">nemotron-3-nano:30b-cloud</a><span class="badge">30b-cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run nemotron-3-nano:30b-cloud" title="Copy: ollama run nemotron-3-nano:30b-cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.06" class="price">$0.06</td>
         <td data-col="peak-cached" data-sort="" class="price na">&mdash;</td>
-        <td data-col="peak-output" data-sort="0.24" class="price">$0.24</td>
+        <td data-col="peak-output" data-sort="0.24" class="price best">$0.24</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="1000000.0">1M tokens</td>
         <td data-col="size"    data-sort="30000000000.0">30B parameters</td>
       </tr>
       <tr data-model="mistral-large-3:675b-cloud">
-        <td data-col="model"><a href="https://ollama.com/library/mistral-large-3:675b-cloud">mistral-large-3:675b-cloud</a><span class="badge">675b-cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/mistral-large-3:675b-cloud">mistral-large-3:675b-cloud</a><span class="badge">675b-cloud</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run mistral-large-3:675b-cloud" title="Copy: ollama run mistral-large-3:675b-cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.5" class="price">$0.50</td>
         <td data-col="peak-cached" data-sort="" class="price na">&mdash;</td>
         <td data-col="peak-output" data-sort="1.5" class="price">$1.50</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="256000.0">256K tokens</td>
         <td data-col="size"    data-sort="675000000000.0">675B parameters</td>
       </tr>
       <tr data-model="gpt-oss:120b-cloud">
-        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:120b-cloud">gpt-oss:120b-cloud</a><span class="badge">120b-cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:120b-cloud">gpt-oss:120b-cloud</a><span class="badge">120b-cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run gpt-oss:120b-cloud" title="Copy: ollama run gpt-oss:120b-cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
         <td data-col="peak-cached" data-sort="0.014" class="price">$0.014</td>
         <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="128000.0">128K tokens</td>
         <td data-col="size"    data-sort="120000000000.0">120B parameters</td>
       </tr>
       <tr data-model="gpt-oss:20b-cloud">
-        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:20b-cloud">gpt-oss:20b-cloud</a><span class="badge">20b-cloud</span></td>
+        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:20b-cloud">gpt-oss:20b-cloud</a><span class="badge">20b-cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run gpt-oss:20b-cloud" title="Copy: ollama run gpt-oss:20b-cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.07" class="price">$0.07</td>
         <td data-col="peak-cached" data-sort="0.035" class="price">$0.035</td>
         <td data-col="peak-output" data-sort="0.3" class="price">$0.30</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
         <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
         <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
         <td data-col="context" data-sort="128000.0">128K tokens</td>
         <td data-col="size"    data-sort="20000000000.0">20B parameters</td>
       </tr>
@@ -324,7 +355,7 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-04 01:32 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-04 01:49 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
@@ -368,6 +399,31 @@ document.getElementById('filter').addEventListener('input', e => {
   rows().forEach(r => {
     r.style.display = r.dataset.model.includes(q) ? '' : 'none';
   });
+});
+
+// Copy "ollama run ..." buttons (event delegation on the table body)
+tbody.addEventListener('click', e => {
+  const btn = e.target.closest('.copybtn');
+  if (!btn) return;
+  const done = () => {
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '⧉';
+      btn.classList.remove('copied');
+    }, 1500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(btn.dataset.cmd).then(done);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = btn.dataset.cmd;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    done();
+  }
 });
 
 // ---- Cost calculator ----
