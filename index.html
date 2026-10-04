@@ -87,6 +87,27 @@
     color: #171717; cursor: pointer;
   }
   .calc-hint { margin: .6rem 0 0; font-size: .75rem; color: var(--muted); }
+  .calc-presets {
+    display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+    margin: .9rem 0 0; font-size: .8rem; color: var(--muted);
+  }
+  .btn {
+    border: 1px solid var(--border); border-radius: 1rem; padding: .15rem .7rem;
+    background: #fff; cursor: pointer; font-size: .75rem; color: #171717;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  #calc-results td.costcell { min-width: 9rem; }
+  #calc-results .bar {
+    height: 5px; margin-top: 3px; border-radius: 3px; min-width: 2px;
+    background: var(--accent); opacity: .45;
+  }
+  #calc-results .diff { font-size: .75rem; color: var(--muted); font-weight: 400; }
+  #calc-results .diff.lowest { color: var(--accent); font-weight: 600; }
+  tr.podium-1 td:first-child { color: #b8860b; font-weight: 700; }
+  tr.podium-2 td:first-child { color: #6b7280; font-weight: 700; }
+  tr.podium-3 td:first-child { color: #92400e; font-weight: 700; }
+  tr.overcontext td { opacity: .55; }
+  .ctx-warn { color: #b45309; cursor: help; }
   .calc-error { margin: .75rem 0 0; font-size: .85rem; color: #b91c1c; }
   .calc-summary { margin: .75rem 0 0; font-size: .85rem; }
   .calc-summary strong { color: var(--accent); }
@@ -345,21 +366,32 @@
       <label>Output tokens
         <input id="calc-output" type="text" value="1M" inputmode="decimal">
       </label>
+      <label>Tokens per request <span style="font-size:.7rem">(optional)</span>
+        <input id="calc-req" type="text" placeholder="e.g. 100K" inputmode="decimal">
+      </label>
       <fieldset class="calc-rate">
         <label><input type="radio" name="calc-rate" value="peak" checked> Peak</label>
         <label><input type="radio" name="calc-rate" value="off"> Off-Peak</label>
         <label><input type="radio" name="calc-rate" value="both"> Both</label>
       </fieldset>
     </div>
-    <p class="calc-hint">Amounts accept <code>K</code> / <code>M</code> / <code>G</code> suffixes and commas, e.g. <code>2M</code> or <code>500,000</code>.</p>
+    <div class="calc-presets">
+      Presets:
+      <button class="btn" data-preset="1M,9M,300K">Code assistant</button>
+      <button class="btn" data-preset="300K,0,1M">Chatbot</button>
+      <button class="btn" data-preset="10M,0,2M">Batch summarization</button>
+      <span style="flex:1"></span>
+      <button class="btn" id="calc-export">Export CSV</button>
+    </div>
+    <p class="calc-hint">Amounts accept <code>K</code> / <code>M</code> / <code>G</code> suffixes and commas, e.g. <code>2M</code> or <code>500,000</code>. Settings persist and are shareable via the URL hash. Ranks models matching the filter above.</p>
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-04 01:49 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-04 01:56 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
-<script type="application/json" id="model-data">[{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:120b-cloud","url":"https://ollama.com/library/gpt-oss:120b-cloud","peak":{"input":0.15,"cached":0.014,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:20b-cloud","url":"https://ollama.com/library/gpt-oss:20b-cloud","peak":{"input":0.07,"cached":0.035,"output":0.3},"off":{"input":null,"cached":null,"output":null}}]</script>
+<script type="application/json" id="model-data">[{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","context":256000.0,"peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","context":1000000.0,"peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","context":256000.0,"peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:120b-cloud","url":"https://ollama.com/library/gpt-oss:120b-cloud","context":128000.0,"peak":{"input":0.15,"cached":0.014,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:20b-cloud","url":"https://ollama.com/library/gpt-oss:20b-cloud","context":128000.0,"peak":{"input":0.07,"cached":0.035,"output":0.3},"off":{"input":null,"cached":null,"output":null}}]</script>
 <script>
 const tbody = document.querySelector('#costs tbody');
 const rows = () => Array.from(tbody.querySelectorAll('tr'));
@@ -399,6 +431,7 @@ document.getElementById('filter').addEventListener('input', e => {
   rows().forEach(r => {
     r.style.display = r.dataset.model.includes(q) ? '' : 'none';
   });
+  updateCalc();  // keep the calculator ranking in sync with the filter
 });
 
 // Copy "ollama run ..." buttons (event delegation on the table body)
@@ -430,6 +463,9 @@ tbody.addEventListener('click', e => {
 const MODELS = JSON.parse(document.getElementById('model-data').textContent);
 const calcInputs = ['calc-input', 'calc-cached', 'calc-output']
   .map(id => document.getElementById(id));
+const reqInput = document.getElementById('calc-req');
+const STORE_KEY = 'ollama-calc';
+let lastResults = [];
 
 function parseTokens(s) {
   s = String(s).trim().toLowerCase().replace(/[,\s_]/g, '');
@@ -456,55 +492,133 @@ function costFor(rates, amounts) {
   return total;
 }
 
+function currentMode() {
+  return document.querySelector('input[name="calc-rate"]:checked').value;
+}
+
+// Persist inputs: localStorage for revisits, URL hash for sharing.
+function saveCalcState() {
+  const s = {
+    'in': calcInputs[0].value, cached: calcInputs[1].value,
+    out: calcInputs[2].value, req: reqInput.value, rate: currentMode()
+  };
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) {}
+  const p = new URLSearchParams();
+  ['in', 'cached', 'out', 'req', 'rate'].forEach(k => { if (s[k]) p.set(k, s[k]); });
+  history.replaceState(null, '', '#' + p.toString());
+}
+
+function loadCalcState() {
+  let s = null;
+  if (location.hash.length > 1) {
+    const p = new URLSearchParams(location.hash.slice(1));
+    if (p.get('in') || p.get('out')) {
+      s = {'in': p.get('in'), cached: p.get('cached'), out: p.get('out'),
+           req: p.get('req'), rate: p.get('rate')};
+    }
+  }
+  if (!s) {
+    try { s = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) {}
+  }
+  if (!s) return;
+  if (s['in'] != null) calcInputs[0].value = s['in'];
+  if (s.cached != null) calcInputs[1].value = s.cached;
+  if (s.out != null) calcInputs[2].value = s.out;
+  if (s.req) reqInput.value = s.req;
+  if (s.rate) {
+    const radio = document.querySelector(
+      'input[name="calc-rate"][value="' + s.rate + '"]');
+    if (radio) radio.checked = true;
+  }
+}
+
+// Cost cell: value, proportional bar, and delta vs the cheapest model.
+function costCell(cost, best, max) {
+  if (cost === null) return '<td class="price na costcell">&mdash;</td>';
+  const width = max > 0 ? Math.max(2, cost / max * 100) : 2;
+  const bar = '<div class="bar" style="width:' + width.toFixed(1) + '%"></div>';
+  let diff;
+  if (cost === best) {
+    diff = '<div class="diff lowest">lowest</div>';
+  } else {
+    const pct = best > 0 ? ' (+' + Math.round((cost - best) / best * 100) + '%)' : '';
+    diff = '<div class="diff">+' + money(cost - best) + pct + '</div>';
+  }
+  return '<td class="price costcell">' + money(cost) + bar + diff + '</td>';
+}
+
 function updateCalc() {
   const amounts = [
     ['input', parseTokens(calcInputs[0].value)],
     ['cached', parseTokens(calcInputs[1].value)],
     ['output', parseTokens(calcInputs[2].value)],
   ];
-  const mode = document.querySelector('input[name="calc-rate"]:checked').value;
+  const reqEmpty = reqInput.value.trim() === '';
+  const perReq = reqEmpty ? 0 : parseTokens(reqInput.value);
+  const mode = currentMode();
   const out = document.getElementById('calc-results');
 
-  if (amounts.some(([, a]) => isNaN(a) || a < 0)) {
+  if (amounts.some(([, a]) => isNaN(a) || a < 0) || (!reqEmpty && (isNaN(perReq) || perReq < 0))) {
     out.innerHTML = '<p class="calc-error">Enter valid token amounts ' +
       '(e.g. 2M or 500,000).</p>';
     return;
   }
+  saveCalcState();
 
-  const results = MODELS.map(m => ({
-    name: m.name, url: m.url,
-    peak: costFor(m.peak, amounts),
-    off: costFor(m.off, amounts),
-  }));
+  // Respect the main table's filter.
+  const q = document.getElementById('filter').value.toLowerCase();
+  const results = MODELS
+    .filter(m => m.name.toLowerCase().includes(q))
+    .map(m => ({
+      name: m.name, url: m.url,
+      fits: perReq <= 0 || !m.context || m.context >= perReq,
+      peak: costFor(m.peak, amounts),
+      off: costFor(m.off, amounts),
+    }));
   const key = mode === 'off' ? 'off' : 'peak';
   results.sort((a, b) => {
     const va = a[key] === null ? Infinity : a[key];
     const vb = b[key] === null ? Infinity : b[key];
     return va - vb;
   });
+  lastResults = results;
+  if (results.length === 0) {
+    out.innerHTML = '<p class="calc-error">No models match the filter.</p>';
+    return;
+  }
 
-  const bestPeak = Math.min(...results.map(r => r.peak === null ? Infinity : r.peak));
-  const bestOff = Math.min(...results.map(r => r.off === null ? Infinity : r.off));
+  const vals = k => results.map(r => r[k]).filter(c => c !== null);
+  const bestPeak = Math.min(...vals('peak')), bestOff = Math.min(...vals('off'));
+  const maxPeak = Math.max(...vals('peak')), maxOff = Math.max(...vals('off'));
   const showPeak = mode !== 'off', showOff = mode !== 'peak';
 
   let html = '<table><thead><tr><th>#</th><th>Model</th>' +
     (showPeak ? '<th>Peak cost</th>' : '') +
     (showOff ? '<th>Off-Peak cost</th>' : '') +
+    (mode === 'both' ? '<th>Savings</th>' : '') +
     '</tr></thead><tbody>';
   results.forEach((r, i) => {
-    const cell = (cost, best) =>
-      cost === null
-        ? '<td class="price na">&mdash;</td>'
-        : '<td class="price' + (cost === best ? ' best' : '') + '">' + money(cost) + '</td>';
-    html += '<tr><td>' + (i + 1) + '</td>' +
-      '<td><a href="' + r.url + '">' + r.name + '</a></td>' +
-      (showPeak ? cell(r.peak, bestPeak) : '') +
-      (showOff ? cell(r.off, bestOff) : '') +
-      '</tr>';
+    const warn = r.fits || perReq <= 0 ? ''
+      : ' <span class="ctx-warn" title="Context window too small for ' +
+        reqInput.value + ' tokens per request">⚠</span>';
+    let cells = '';
+    if (showPeak) cells += costCell(r.peak, bestPeak, maxPeak);
+    if (showOff) cells += costCell(r.off, bestOff, maxOff);
+    if (mode === 'both') {
+      cells += (r.peak !== null && r.off !== null && r.peak > 0)
+        ? '<td class="price">−' + Math.round((r.peak - r.off) / r.peak * 100) + '%</td>'
+        : '<td class="price na">&mdash;</td>';
+    }
+    const podium = (r[key] !== null && i < 3) ? 'podium-' + (i + 1) : '';
+    const dim = r.fits ? '' : 'overcontext';
+    html += '<tr class="' + (podium + ' ' + dim).trim() + '">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><a href="' + r.url + '">' + r.name + '</a>' + warn + '</td>' +
+      cells + '</tr>';
   });
   html += '</tbody></table>';
 
-  const cheapest = results.find(r => r[key] !== null);
+  const cheapest = results.find(r => r[key] !== null && r.fits);
   if (cheapest) {
     html += '<p class="calc-summary">Cheapest: <strong>' + cheapest.name +
       '</strong> at <strong>' + money(cheapest[key]) + '</strong> (' +
@@ -513,9 +627,32 @@ function updateCalc() {
   out.innerHTML = html;
 }
 
-calcInputs.forEach(i => i.addEventListener('input', updateCalc));
+function exportCsv() {
+  const nl = String.fromCharCode(10);
+  const lines = ['model,url,peak_cost,offpeak_cost'];
+  lastResults.forEach(r => {
+    lines.push([r.name, r.url,
+      r.peak === null ? '' : r.peak.toFixed(4),
+      r.off === null ? '' : r.off.toFixed(4)].join(','));
+  });
+  const blob = new Blob([lines.join(nl) + nl], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ollama_cloud_costs.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+calcInputs.concat([reqInput]).forEach(i => i.addEventListener('input', updateCalc));
 document.querySelectorAll('input[name="calc-rate"]')
   .forEach(r => r.addEventListener('change', updateCalc));
+document.querySelectorAll('.calc-presets [data-preset]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    btn.dataset.preset.split(',').forEach((v, i) => { calcInputs[i].value = v; });
+    updateCalc();
+  }));
+document.getElementById('calc-export').addEventListener('click', exportCsv);
+loadCalcState();
 updateCalc();
 </script>
 </body>
