@@ -387,7 +387,7 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-04 01:56 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-04 02:15 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
@@ -654,6 +654,15 @@ document.querySelectorAll('.calc-presets [data-preset]').forEach(btn =>
 document.getElementById('calc-export').addEventListener('click', exportCsv);
 loadCalcState();
 updateCalc();
+
+// Cloudflare Web Analytics (production only - not localhost/file previews)
+if (location.hostname === 'kasp0r.github.io') {
+  const cf = document.createElement('script');
+  cf.type = 'module';
+  cf.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+  cf.dataset.cfBeacon = '{"token": "447d06c6b5984dc9b25727f60b6d4f3c"}';
+  document.head.appendChild(cf);
+}
 </script>
 </body>
 </html>
