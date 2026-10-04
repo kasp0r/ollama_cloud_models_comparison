@@ -117,11 +117,34 @@
     padding: 1rem 1.25rem; margin: 1.25rem 0 0; background: #fff;
   }
   .chart h2 { margin: 0 0 .5rem; font-size: 1rem; }
-  .chart svg { width: 100%; height: auto; display: block; }
-  .chart .axis { font-size: 11px; fill: #737373; }
-  .chart .grid { stroke: #eee; stroke-width: 1; }
-  .chart .bubble:hover { fill-opacity: .8; }
   .chart-caption { margin: .5rem 0 0; font-size: .75rem; color: var(--muted); }
+  .heat { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  .heat th, .heat td { padding: .35rem .5rem; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .heat th:first-child, .heat td:first-child { text-align: left; }
+  .heat th button { all: unset; cursor: pointer; font-weight: 600; }
+  .heat th button:hover { color: var(--accent); text-decoration: underline; }
+  .stackrow { display: flex; align-items: center; gap: .5rem; margin: .15rem 0; font-size: .8rem; }
+  .stackname {
+    width: 11.5rem; text-align: right; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .stacktrack {
+    flex: 1; display: flex; height: 14px; background: #f5f5f5;
+    border-radius: 3px; overflow: hidden;
+  }
+  .seg { height: 100%; }
+  .seg.i { background: #0f766e; }
+  .seg.c { background: #6366f1; }
+  .seg.o { background: #d97706; }
+  .stacktotal { width: 4.5rem; font-variant-numeric: tabular-nums; }
+  .stacklegend {
+    display: flex; gap: 1rem; font-size: .75rem; color: var(--muted);
+    margin: .6rem 0 .35rem;
+  }
+  .swatch {
+    display: inline-block; width: .7rem; height: .7rem; border-radius: 2px;
+    margin-right: .25rem; vertical-align: -1px;
+  }
   td.best { color: var(--accent); font-weight: 600; }
   footer { margin-top: 1rem; color: var(--muted); font-size: .8rem; }
   footer code { background: var(--header-bg); padding: .1rem .3rem; border-radius: .25rem; }
@@ -364,10 +387,10 @@
       </tr>
     </tbody>
   </table>
-  <section class="chart" id="chart">
-    <h2>Context window vs. output cost</h2>
-    <div id="chartplot"></div>
-    <p class="chart-caption">Bubble size = parameter count. Peak output rates, log scales. Hover for details, click a bubble to open the model page.</p>
+  <section class="chart" id="heat">
+    <h2>Cost by workload (peak)</h2>
+    <div id="heatplot"></div>
+    <p class="chart-caption">Darker = more expensive within each workload column. Click a column header to load that workload into the calculator below.</p>
   </section>
   <section class="calc" id="calc">
     <h2>Cost calculator</h2>
@@ -399,10 +422,11 @@
       <button class="btn" id="calc-export">Export CSV</button>
     </div>
     <p class="calc-hint">Amounts accept <code>K</code> / <code>M</code> / <code>G</code> suffixes and commas, e.g. <code>2M</code> or <code>500,000</code>. Settings persist and are shareable via the URL hash. Ranks models matching the filter above.</p>
+    <div id="stackbars"></div>
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-04 09:52 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-04 09:58 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
@@ -576,6 +600,7 @@ function updateCalc() {
   if (amounts.some(([, a]) => isNaN(a) || a < 0) || (!reqEmpty && (isNaN(perReq) || perReq < 0))) {
     out.innerHTML = '<p class="calc-error">Enter valid token amounts ' +
       '(e.g. 2M or 500,000).</p>';
+    document.getElementById('stackbars').innerHTML = '';
     return;
   }
   saveCalcState();
@@ -585,7 +610,7 @@ function updateCalc() {
   const results = MODELS
     .filter(m => m.name.toLowerCase().includes(q))
     .map(m => ({
-      name: m.name, url: m.url,
+      name: m.name, url: m.url, model: m,
       fits: perReq <= 0 || !m.context || m.context >= perReq,
       peak: costFor(m.peak, amounts),
       off: costFor(m.off, amounts),
@@ -599,6 +624,7 @@ function updateCalc() {
   lastResults = results;
   if (results.length === 0) {
     out.innerHTML = '<p class="calc-error">No models match the filter.</p>';
+    document.getElementById('stackbars').innerHTML = '';
     return;
   }
 
@@ -632,6 +658,7 @@ function updateCalc() {
       cells + '</tr>';
   });
   html += '</tbody></table>';
+  renderStackedBars(results, amounts, mode);
 
   const cheapest = results.find(r => r[key] !== null && r.fits);
   if (cheapest) {
@@ -668,64 +695,94 @@ document.querySelectorAll('.calc-presets [data-preset]').forEach(btn =>
   }));
 document.getElementById('calc-export').addEventListener('click', exportCsv);
 
-// ---- Context / cost / size bubble chart ----
-function fmtTok(v) { return v >= 1e6 ? (v / 1e6) + 'M' : (v / 1e3) + 'K'; }
-function fmtParams(v) {
-  if (v >= 1e12) return parseFloat((v / 1e12).toFixed(2)) + 'T';
-  if (v >= 1e9) return parseFloat((v / 1e9).toFixed(1)) + 'B';
-  return v + '';
+// ---- Stacked workload-cost bars (synced with the calculator) ----
+const SEG_LABELS = ['Input', 'Cached', 'Output'];
+const SEG_CLASSES = ['i', 'c', 'o'];
+
+function renderStackedBars(results, amounts, mode) {
+  const el = document.getElementById('stackbars');
+  if (!el) return;
+  const key = mode === 'off' ? 'off' : 'peak';
+  const priced = results.filter(r => r[key] !== null);
+  if (!priced.length) { el.innerHTML = ''; return; }
+  const maxT = Math.max(...priced.map(r => r[key]));
+  let html = '<div class="stacklegend">';
+  SEG_LABELS.forEach((label, i) => {
+    html += '<span><span class="swatch seg ' + SEG_CLASSES[i] + '"></span>' + label + ' cost</span>';
+  });
+  html += '</div>';
+  results.forEach(r => {
+    const name = '<a class="stackname" href="' + r.url + '">' + r.name + '</a>';
+    if (r[key] === null) {
+      html += '<div class="stackrow">' + name +
+        '<div class="stacktrack"></div><span class="stacktotal na">n/a</span></div>';
+      return;
+    }
+    const rates = mode === 'off' ? r.model.off : r.model.peak;
+    const parts = amounts.map(([label, amt], i) => {
+      if (amt <= 0) return '';
+      const c = amt / 1e6 * rates[label];
+      return '<div class="seg ' + SEG_CLASSES[i] + '" style="width:' +
+        (c / maxT * 100).toFixed(2) + '%" title="' + SEG_LABELS[i] + ': ' + money(c) + '"></div>';
+    }).join('');
+    html += '<div class="stackrow"' + (r.fits ? '' : ' style="opacity:.55"') + '>' + name +
+      '<div class="stacktrack" title="' + r.name + ': ' + money(r[key]) + ', ' +
+        (mode === 'off' ? 'off-peak' : 'peak') + ' rates">' + parts + '</div>' +
+      '<span class="stacktotal">' + money(r[key]) + '</span></div>';
+  });
+  el.innerHTML = html;
 }
 
-function renderChart() {
-  const el = document.getElementById('chartplot');
-  const data = MODELS.filter(m =>
-    m.context && m.size && m.peak && m.peak.output !== null && m.peak.output !== undefined);
-  if (!data.length) return;
-
-  const W = 920, H = 420, mL = 64, mR = 24, mT = 16, mB = 52;
-  const xs = data.map(d => Math.log10(d.context));
-  const ys = data.map(d => Math.log10(d.peak.output));
-  const xMin = Math.min(...xs), xMax = Math.max(...xs);
-  const yMin = Math.min(...ys), yMax = Math.max(...ys);
-  const padX = (xMax - xMin) * 0.07 || 0.1;
-  const padY = (yMax - yMin) * 0.10 || 0.1;
-  const X = v => mL + (Math.log10(v) - xMin + padX) / (xMax - xMin + 2 * padX) * (W - mL - mR);
-  const Y = v => H - mB - (Math.log10(v) - yMin + padY) / (yMax - yMin + 2 * padY) * (H - mT - mB);
-  const pMin = Math.min(...data.map(d => d.size));
-  const pMax = Math.max(...data.map(d => d.size));
-  const R = p => 7 + 17 * Math.sqrt((p - pMin) / (pMax - pMin || 1));
-
-  const ctxTicks = [128000, 200000, 256000, 512000, 1000000]
-    .filter(v => Math.log10(v) >= xMin - padX && Math.log10(v) <= xMax + padX);
-  const priceTicks = [0.1, 0.3, 1, 3, 10]
-    .filter(v => Math.log10(v) >= yMin - padY && Math.log10(v) <= yMax + padY);
-
-  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" ' +
-    'aria-label="Scatter of context window vs output cost">';
-  ctxTicks.forEach(t => {
-    s += '<line class="grid" x1="' + X(t) + '" y1="' + mT + '" x2="' + X(t) + '" y2="' + (H - mB) + '"/>' +
-      '<text class="axis" x="' + X(t) + '" y="' + (H - mB + 18) + '" text-anchor="middle">' + fmtTok(t) + '</text>';
+// ---- Cost by workload heatmap (columns mirror the calculator presets) ----
+function renderHeatmap() {
+  const el = document.getElementById('heatplot');
+  if (!el) return;
+  const btns = Array.from(document.querySelectorAll('.calc-presets [data-preset]'));
+  if (!btns.length) return;
+  const presets = btns.map(b => ({
+    label: b.textContent,
+    amounts: ['input', 'cached', 'output']
+      .map((l, i) => [l, parseTokens(b.dataset.preset.split(',')[i])]),
+  }));
+  const rows = MODELS.map(m => ({
+    name: m.name, url: m.url,
+    costs: presets.map(p => costFor(m.peak, p.amounts)),
+  }));
+  rows.sort((a, b) => {
+    const va = a.costs[0] === null ? Infinity : a.costs[0];
+    const vb = b.costs[0] === null ? Infinity : b.costs[0];
+    return va - vb;
   });
-  priceTicks.forEach(t => {
-    s += '<line class="grid" x1="' + mL + '" y1="' + Y(t) + '" x2="' + (W - mR) + '" y2="' + Y(t) + '"/>' +
-      '<text class="axis" x="' + (mL - 8) + '" y="' + (Y(t) + 4) + '" text-anchor="end">$' + t + '</text>';
+  const colStats = presets.map((_, j) => {
+    const cs = rows.map(r => r.costs[j]).filter(c => c !== null);
+    return {min: Math.min(...cs), max: Math.max(...cs)};
   });
-  s += '<text class="axis" x="' + (mL + (W - mL - mR) / 2) + '" y="' + (H - 8) +
-    '" text-anchor="middle" style="font-size:12px">Context window (tokens)</text>' +
-    '<text class="axis" transform="rotate(-90 14 ' + (mT + (H - mT - mB) / 2) + ')" x="14" y="' +
-    (mT + (H - mT - mB) / 2) + '" text-anchor="middle" style="font-size:12px">Output cost ($ / 1M tokens, peak)</text>';
-  data.forEach(d => {
-    s += '<a href="' + d.url + '"><circle class="bubble" cx="' + X(d.context).toFixed(1) +
-      '" cy="' + Y(d.peak.output).toFixed(1) + '" r="' + R(d.size).toFixed(1) +
-      '" fill="#0f766e" fill-opacity="0.45" stroke="#0f766e">' +
-      '<title>' + d.name + '  ·  ' + fmtTok(d.context) + ' context  ·  ' +
-      fmtParams(d.size) + ' params  ·  $' + d.peak.output + '/1M output</title>' +
-      '</circle></a>';
+
+  let html = '<table class="heat"><thead><tr><th>Model</th>';
+  presets.forEach((p, j) => {
+    html += '<th><button type="button" data-col="' + j + '" title="Load this workload into the calculator">' +
+      p.label + '</button></th>';
   });
-  s += '</svg>';
-  el.innerHTML = s;
+  html += '</tr></thead><tbody>';
+  rows.forEach(r => {
+    html += '<tr><td><a href="' + r.url + '">' + r.name + '</a></td>';
+    r.costs.forEach((c, j) => {
+      if (c === null) { html += '<td class="na">&mdash;</td>'; return; }
+      const range = colStats[j].max - colStats[j].min;
+      const t = range > 0 ? (c - colStats[j].min) / range : 0;
+      html += '<td style="background: rgba(15,118,110,' + (0.10 + 0.55 * t).toFixed(2) + ')" title="' +
+        r.name + ' · ' + presets[j].label + ': ' + money(c) + '">' + money(c) + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+  el.querySelectorAll('th button').forEach(btn => btn.addEventListener('click', () => {
+    btns[Number(btn.dataset.col)].click();
+    document.getElementById('calc').scrollIntoView({behavior: 'smooth'});
+  }));
 }
-renderChart();
+renderHeatmap();
 
 loadCalcState();
 updateCalc();
