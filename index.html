@@ -145,6 +145,15 @@
     display: inline-block; width: .7rem; height: .7rem; border-radius: 2px;
     margin-right: .25rem; vertical-align: -1px;
   }
+  .legend { margin: .25rem 0 .75rem; font-size: .78rem; color: var(--muted); }
+  .chg { font-size: .7em; vertical-align: super; }
+  .chg.up { color: #b91c1c; }            /* price went up: bad news */
+  .chg.down { color: #15803d; }          /* price went down: good news */
+  .badge.new { color: #15803d; background: #f0fdf4; }
+  .changes { margin: .25rem 0 0; padding-left: 1.1rem; font-size: .85rem; }
+  .changes li { margin: .2rem 0; }
+  .plus { color: #15803d; font-weight: 700; }
+  .minus { color: #b91c1c; font-weight: 700; }
   td.best { color: var(--accent); font-weight: 600; }
   footer { margin-top: 1rem; color: var(--muted); font-size: .8rem; }
   footer code { background: var(--header-bg); padding: .1rem .3rem; border-radius: .25rem; }
@@ -161,6 +170,7 @@
   <div class="controls">
     <input id="filter" type="search" placeholder="Filter models&hellip;" autofocus>
   </div>
+
   <table id="costs">
     <thead>
       <tr>
@@ -399,6 +409,7 @@
       </tr>
     </tbody>
   </table>
+
   <section class="chart" id="heat">
     <h2>Cost by workload (peak)</h2>
     <div id="heatplot"></div>
@@ -438,7 +449,7 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-08 10:00 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-08 13:37 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
