@@ -438,7 +438,7 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-07 11:03 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-08 10:00 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
@@ -533,14 +533,23 @@ function money(x) {
 }
 
 function costFor(rates, amounts) {
+  // Models without a published cached rate bill cached tokens as input.
+  const eff = {
+    input: rates.input, output: rates.output,
+    cached: (rates.cached !== null && rates.cached !== undefined) ? rates.cached : rates.input,
+  };
   let total = 0;
   for (const [label, amt] of amounts) {
     if (amt <= 0) continue;
-    const price = rates[label];
+    const price = eff[label];
     if (price === null || price === undefined) return null;  // price unknown
     total += amt / 1e6 * price;
   }
   return total;
+}
+
+function cachedAssumed(rates) {
+  return rates.cached === null || rates.cached === undefined;
 }
 
 function currentMode() {
@@ -639,6 +648,8 @@ function updateCalc() {
     document.getElementById('stackbars').innerHTML = '';
     return;
   }
+  const hasAssumed = results.some(r =>
+    amounts[1][1] > 0 && cachedAssumed(mode === 'off' ? r.model.off : r.model.peak));
 
   const vals = k => results.map(r => r[k]).filter(c => c !== null);
   const bestPeak = Math.min(...vals('peak')), bestOff = Math.min(...vals('off'));
@@ -666,7 +677,9 @@ function updateCalc() {
     const dim = r.fits ? '' : 'overcontext';
     html += '<tr class="' + (podium + ' ' + dim).trim() + '">' +
       '<td>' + (i + 1) + '</td>' +
-      '<td><a href="' + r.url + '">' + r.name + '</a>' + warn + '</td>' +
+      '<td><a href="' + r.url + '">' + r.name + '</a>' + warn +
+        (amounts[1][1] > 0 && cachedAssumed(mode === 'off' ? r.model.off : r.model.peak)
+          ? '<span class="na">*</span>' : '') + '</td>' +
       cells + '</tr>';
   });
   html += '</tbody></table>';
@@ -677,6 +690,9 @@ function updateCalc() {
     html += '<p class="calc-summary">Cheapest: <strong>' + cheapest.name +
       '</strong> at <strong>' + money(cheapest[key]) + '</strong> (' +
       (key === 'off' ? 'off-peak' : 'peak') + ' rates)</p>';
+  }
+  if (hasAssumed) {
+    html += '<p class="calc-hint">* No cached rate published; cached tokens billed as regular input.</p>';
   }
   out.innerHTML = html;
 }
@@ -731,19 +747,26 @@ function renderStackedBars(results, amounts, mode) {
       return;
     }
     const rates = mode === 'off' ? r.model.off : r.model.peak;
+    const assumed = amounts[1][1] > 0 && cachedAssumed(rates);
     const parts = amounts.map(([label, amt], i) => {
       if (amt <= 0) return '';
-      const c = amt / 1e6 * rates[label];
+      const price = label === 'cached' && rates.cached == null ? rates.input : rates[label];
+      const c = amt / 1e6 * price;
       return '<div class="seg ' + SEG_CLASSES[i] + '" style="width:' +
-        (c / maxT * 100).toFixed(2) + '%" title="' + SEG_LABELS[i] + ': ' + money(c) + '"></div>';
+        (c / maxT * 100).toFixed(2) + '%" title="' + SEG_LABELS[i] + ': ' + money(c) +
+        (label === 'cached' && assumed ? ' (billed as input)' : '') + '"></div>';
     }).join('');
-    html += '<div class="stackrow"' + (r.fits ? '' : ' style="opacity:.55"') + '>' + name +
+    html += '<div class="stackrow"' + (r.fits ? '' : ' style="opacity:.55"') + '>' +
+      name + (assumed ? '<span class="na">*</span>' : '') +
       '<div class="stacktrack" title="' + r.name + ': ' + money(r[key]) + ', ' +
         (mode === 'off' ? 'off-peak' : 'peak') + ' rates">' + parts + '</div>' +
       '<span class="stacktotal">' + money(r[key]) + '</span></div>';
   });
   el.innerHTML = html;
 }
+
+// Heatmap cells also assume cached == input when no cached rate is published
+// (handled inside costFor).
 
 // ---- Cost by workload heatmap (columns mirror the calculator presets) ----
 function renderHeatmap() {
