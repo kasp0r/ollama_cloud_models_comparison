@@ -164,8 +164,8 @@
   <h1>Ollama Cloud Model Cost Table</h1>
   <p class="sub">
     Prices per 1M tokens for Ollama <em>cloud</em> models (run with the
-    <code>:cloud</code> tag, e.g. <code>ollama run beam:cloud</code>).
-    21 models, sorted newest first. Click a column header to sort.
+    <code>:cloud</code> tag, e.g. <code>ollama run minimax-m3.1-flash:cloud</code>).
+    20 models, sorted newest first. Click a column header to sort.
   </p>
   <div class="controls">
     <input id="filter" type="search" placeholder="Filter models&hellip;" autofocus>
@@ -192,6 +192,19 @@
       </tr>
     </thead>
     <tbody>
+      <tr data-model="minimax-m3.1-flash">
+        <td data-col="model"><a href="https://ollama.com/library/minimax-m3.1-flash">minimax-m3.1-flash</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><span class="badge new">new</span><button class="copybtn" data-cmd="ollama run minimax-m3.1-flash:cloud" title="Copy: ollama run minimax-m3.1-flash:cloud">&#x29C9;</button></td>
+        <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
+        <td data-col="peak-cached" data-sort="0.015" class="price">$0.015</td>
+        <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="976000.0">976K</td>
+        <td data-col="size"    data-sort="428000000000.0">428B</td>
+        <td data-col="updated" data-sort="2026-10-19">Oct 19, 2026</td>
+      </tr>
       <tr data-model="beam">
         <td data-col="model"><a href="https://ollama.com/library/beam">beam</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run beam:cloud" title="Copy: ollama run beam:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="" class="price na">&mdash;</td>
@@ -255,7 +268,7 @@
         <td data-col="savings" data-sort="50.0" class="price">&minus;50%</td>
         <td data-col="context" data-sort="1000000.0">1M</td>
         <td data-col="size"    data-sort="763000000000.0">763B</td>
-        <td data-col="updated" data-sort="2026-09-11">Sep 11, 2026</td>
+        <td data-col="updated" data-sort="2026-10-17">Oct 17, 2026</td>
       </tr>
       <tr data-model="glm-5.3-flash">
         <td data-col="model"><a href="https://ollama.com/library/glm-5.3-flash">glm-5.3-flash</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run glm-5.3-flash:cloud" title="Copy: ollama run glm-5.3-flash:cloud">&#x29C9;</button></td>
@@ -439,35 +452,9 @@
         <td data-col="size"    data-sort="675000000000.0">675B</td>
         <td data-col="updated" data-sort="2025-12-02">Dec 2, 2025</td>
       </tr>
-      <tr data-model="gpt-oss:120b-cloud">
-        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:120b-cloud">gpt-oss:120b-cloud</a><span class="badge">120b-cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run gpt-oss:120b-cloud" title="Copy: ollama run gpt-oss:120b-cloud">&#x29C9;</button></td>
-        <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
-        <td data-col="peak-cached" data-sort="0.014" class="price">$0.014</td>
-        <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
-        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
-        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
-        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
-        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
-        <td data-col="context" data-sort="128000.0">128K</td>
-        <td data-col="size"    data-sort="120000000000.0">120B</td>
-        <td data-col="updated" data-sort="2026-10-09">Oct 9, 2026</td>
-      </tr>
-      <tr data-model="gpt-oss:20b-cloud">
-        <td data-col="model"><a href="https://ollama.com/library/gpt-oss:20b-cloud">gpt-oss:20b-cloud</a><span class="badge">20b-cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run gpt-oss:20b-cloud" title="Copy: ollama run gpt-oss:20b-cloud">&#x29C9;</button></td>
-        <td data-col="peak-input"  data-sort="0.07" class="price">$0.07</td>
-        <td data-col="peak-cached" data-sort="0.035" class="price">$0.035</td>
-        <td data-col="peak-output" data-sort="0.3" class="price">$0.30</td>
-        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
-        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
-        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
-        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
-        <td data-col="context" data-sort="128000.0">128K</td>
-        <td data-col="size"    data-sort="20000000000.0">20B</td>
-        <td data-col="updated" data-sort="2026-10-09">Oct 9, 2026</td>
-      </tr>
     </tbody>
   </table>
-
+<section class="chart" id="history"><h2>Recent changes (snapshot 2026-10-17 → 2026-10-19)</h2><ul class="changes"><li><span class="plus">+</span> <strong>minimax-m3.1-flash</strong> added</li><li><span class="minus">−</span> <strong>gpt-oss:120b-cloud</strong> removed</li><li><span class="minus">−</span> <strong>gpt-oss:20b-cloud</strong> removed</li></ul></section>
   <section class="chart" id="heat">
     <h2>Cost by workload (peak)</h2>
     <div id="heatplot"></div>
@@ -507,11 +494,11 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-10-18 08:50 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-10-19 20:32 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
-<script type="application/json" id="model-data">[{"name":"beam","url":"https://ollama.com/library/beam","context":1000000.0,"size":501000000000.0,"peak":{"input":null,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"muse-spark-open","url":"https://ollama.com/library/muse-spark-open","context":1000000.0,"size":822000000000.0,"peak":{"input":1.25,"cached":0.15,"output":4.25},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-4","url":"https://ollama.com/library/mistral-large-4","context":1000000.0,"size":1050000000000.0,"peak":{"input":0.68,"cached":0.07,"output":2.09},"off":{"input":null,"cached":null,"output":null}},{"name":"clef","url":"https://ollama.com/library/clef","context":64000.0,"size":27400000000.0,"peak":{"input":0.24,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"size":763000000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"size":321000000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"size":753000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"size":2810000000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"size":756000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"size":550000000000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"size":null,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"size":1650000000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"size":229000000000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"size":32700000000.000004,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","context":256000.0,"size":120000000000.0,"peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","context":1000000.0,"size":30000000000.0,"peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","context":256000.0,"size":675000000000.0,"peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:120b-cloud","url":"https://ollama.com/library/gpt-oss:120b-cloud","context":128000.0,"size":120000000000.0,"peak":{"input":0.15,"cached":0.014,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"gpt-oss:20b-cloud","url":"https://ollama.com/library/gpt-oss:20b-cloud","context":128000.0,"size":20000000000.0,"peak":{"input":0.07,"cached":0.035,"output":0.3},"off":{"input":null,"cached":null,"output":null}}]</script>
+<script type="application/json" id="model-data">[{"name":"minimax-m3.1-flash","url":"https://ollama.com/library/minimax-m3.1-flash","context":976000.0,"size":428000000000.0,"peak":{"input":0.15,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"beam","url":"https://ollama.com/library/beam","context":1000000.0,"size":501000000000.0,"peak":{"input":null,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"muse-spark-open","url":"https://ollama.com/library/muse-spark-open","context":1000000.0,"size":822000000000.0,"peak":{"input":1.25,"cached":0.15,"output":4.25},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-4","url":"https://ollama.com/library/mistral-large-4","context":1000000.0,"size":1050000000000.0,"peak":{"input":0.68,"cached":0.07,"output":2.09},"off":{"input":null,"cached":null,"output":null}},{"name":"clef","url":"https://ollama.com/library/clef","context":64000.0,"size":27400000000.0,"peak":{"input":0.24,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"size":763000000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"size":321000000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"size":753000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"size":2810000000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"size":756000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"size":550000000000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"size":null,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"size":1650000000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"size":229000000000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"size":32700000000.000004,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","context":256000.0,"size":120000000000.0,"peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-nano:30b-cloud","url":"https://ollama.com/library/nemotron-3-nano:30b-cloud","context":1000000.0,"size":30000000000.0,"peak":{"input":0.06,"cached":null,"output":0.24},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-3:675b-cloud","url":"https://ollama.com/library/mistral-large-3:675b-cloud","context":256000.0,"size":675000000000.0,"peak":{"input":0.5,"cached":null,"output":1.5},"off":{"input":null,"cached":null,"output":null}}]</script>
 <script>
 const tbody = document.querySelector('#costs tbody');
 const rows = () => Array.from(tbody.querySelectorAll('tr'));
