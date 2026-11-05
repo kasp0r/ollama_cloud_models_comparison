@@ -164,7 +164,7 @@
   <h1>Ollama Cloud Model Cost Table</h1>
   <p class="sub">
     Prices per 1M tokens for Ollama <em>cloud</em> models (run with the
-    <code>:cloud</code> tag, e.g. <code>ollama run minimax-m3.1-flash:cloud</code>).
+    <code>:cloud</code> tag, e.g. <code>ollama run kimi-k3.1-pro:cloud</code>).
     20 models, sorted newest first. Click a column header to sort.
   </p>
   <div class="controls">
@@ -192,6 +192,19 @@
       </tr>
     </thead>
     <tbody>
+      <tr data-model="kimi-k3.1-pro">
+        <td data-col="model"><a href="https://ollama.com/library/kimi-k3.1-pro">kimi-k3.1-pro</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><span class="badge new">new</span><button class="copybtn" data-cmd="ollama run kimi-k3.1-pro:cloud" title="Copy: ollama run kimi-k3.1-pro:cloud">&#x29C9;</button></td>
+        <td data-col="peak-input"  data-sort="2.0" class="price">$2.00</td>
+        <td data-col="peak-cached" data-sort="0.2" class="price">$0.20</td>
+        <td data-col="peak-output" data-sort="10.0" class="price">$10.00</td>
+        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
+        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
+        <td data-col="context" data-sort="1000000.0">1M</td>
+        <td data-col="size"    data-sort="2810000000000.0">2.81T</td>
+        <td data-col="updated" data-sort="2026-11-04">Nov 4, 2026</td>
+      </tr>
       <tr data-model="minimax-m3.1-flash">
         <td data-col="model"><a href="https://ollama.com/library/minimax-m3.1-flash">minimax-m3.1-flash</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><span class="cap">vision</span><button class="copybtn" data-cmd="ollama run minimax-m3.1-flash:cloud" title="Copy: ollama run minimax-m3.1-flash:cloud">&#x29C9;</button></td>
         <td data-col="peak-input"  data-sort="0.15" class="price">$0.15</td>
@@ -363,7 +376,7 @@
       </tr>
       <tr data-model="nemotron-3-ultra">
         <td data-col="model"><a href="https://ollama.com/library/nemotron-3-ultra">nemotron-3-ultra</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run nemotron-3-ultra:cloud" title="Copy: ollama run nemotron-3-ultra:cloud">&#x29C9;</button></td>
-        <td data-col="peak-input"  data-sort="0.1" class="price">$0.10</td>
+        <td data-col="peak-input"  data-sort="0.1" class="price best">$0.10</td>
         <td data-col="peak-cached" data-sort="0.1" class="price">$0.10</td>
         <td data-col="peak-output" data-sort="3.0" class="price">$3.00</td>
         <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
@@ -439,22 +452,9 @@
         <td data-col="size"    data-sort="32700000000.000004">32.7B</td>
         <td data-col="updated" data-sort="2026-10-12">Oct 12, 2026</td>
       </tr>
-      <tr data-model="nemotron-3-super">
-        <td data-col="model"><a href="https://ollama.com/library/nemotron-3-super">nemotron-3-super</a><span class="badge">cloud</span><span class="cap">thinking</span><span class="cap">tools</span><button class="copybtn" data-cmd="ollama run nemotron-3-super:cloud" title="Copy: ollama run nemotron-3-super:cloud">&#x29C9;</button></td>
-        <td data-col="peak-input"  data-sort="0.015" class="price best">$0.015</td>
-        <td data-col="peak-cached" data-sort="0.015" class="price">$0.015</td>
-        <td data-col="peak-output" data-sort="0.6" class="price">$0.60</td>
-        <td data-col="off-input"   data-sort="" class="price na">&mdash;</td>
-        <td data-col="off-cached"  data-sort="" class="price na">&mdash;</td>
-        <td data-col="off-output"  data-sort="" class="price na">&mdash;</td>
-        <td data-col="savings" data-sort="" class="price na">&mdash;</td>
-        <td data-col="context" data-sort="256000.0">256K</td>
-        <td data-col="size"    data-sort="120000000000.0">120B</td>
-        <td data-col="updated" data-sort="2026-03-11">Mar 11, 2026</td>
-      </tr>
     </tbody>
   </table>
-
+<section class="chart" id="history"><h2>Recent changes (snapshot 2026-10-31 → 2026-11-05)</h2><ul class="changes"><li><span class="plus">+</span> <strong>kimi-k3.1-pro</strong> added</li><li><span class="minus">−</span> <strong>nemotron-3-super</strong> removed</li></ul></section>
   <section class="chart" id="heat">
     <h2>Cost by workload (peak)</h2>
     <div id="heatplot"></div>
@@ -494,11 +494,11 @@
     <div id="calc-results"></div>
   </section>
   <footer>
-    Generated 2026-11-01 11:14 UTC by <code>generate.py</code> &middot; Sources:
+    Generated 2026-11-05 12:17 UTC by <code>generate.py</code> &middot; Sources:
     <a href="https://ollama.com/search?c=cloud&o=newest">ollama.com/search?c=cloud</a> and linked model pages.
   </footer>
 </main>
-<script type="application/json" id="model-data">[{"name":"minimax-m3.1-flash","url":"https://ollama.com/library/minimax-m3.1-flash","context":976000.0,"size":428000000000.0,"peak":{"input":0.15,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"beam","url":"https://ollama.com/library/beam","context":1000000.0,"size":501000000000.0,"peak":{"input":null,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"muse-spark-open","url":"https://ollama.com/library/muse-spark-open","context":1000000.0,"size":822000000000.0,"peak":{"input":1.25,"cached":0.15,"output":4.25},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-4","url":"https://ollama.com/library/mistral-large-4","context":1000000.0,"size":1050000000000.0,"peak":{"input":0.7,"cached":0.07,"output":2.1},"off":{"input":null,"cached":null,"output":null}},{"name":"clef","url":"https://ollama.com/library/clef","context":64000.0,"size":27400000000.0,"peak":{"input":0.24,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"mimo-v2.6-flash","url":"https://ollama.com/library/mimo-v2.6-flash","context":1000000.0,"size":161000000000.0,"peak":{"input":0.14,"cached":0.0028,"output":0.28},"off":{"input":null,"cached":null,"output":null}},{"name":"mimo-v2.6-pro","url":"https://ollama.com/library/mimo-v2.6-pro","context":1000000.0,"size":528000000000.0,"peak":{"input":0.435,"cached":0.0036,"output":0.87},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"size":763000000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"size":321000000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"size":753000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"size":2810000000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"size":756000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"size":550000000000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"size":null,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"size":1650000000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"size":229000000000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"size":32700000000.000004,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-super","url":"https://ollama.com/library/nemotron-3-super","context":256000.0,"size":120000000000.0,"peak":{"input":0.015,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}}]</script>
+<script type="application/json" id="model-data">[{"name":"kimi-k3.1-pro","url":"https://ollama.com/library/kimi-k3.1-pro","context":1000000.0,"size":2810000000000.0,"peak":{"input":2.0,"cached":0.2,"output":10.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3.1-flash","url":"https://ollama.com/library/minimax-m3.1-flash","context":976000.0,"size":428000000000.0,"peak":{"input":0.15,"cached":0.015,"output":0.6},"off":{"input":null,"cached":null,"output":null}},{"name":"beam","url":"https://ollama.com/library/beam","context":1000000.0,"size":501000000000.0,"peak":{"input":null,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"muse-spark-open","url":"https://ollama.com/library/muse-spark-open","context":1000000.0,"size":822000000000.0,"peak":{"input":1.25,"cached":0.15,"output":4.25},"off":{"input":null,"cached":null,"output":null}},{"name":"mistral-large-4","url":"https://ollama.com/library/mistral-large-4","context":1000000.0,"size":1050000000000.0,"peak":{"input":0.7,"cached":0.07,"output":2.1},"off":{"input":null,"cached":null,"output":null}},{"name":"clef","url":"https://ollama.com/library/clef","context":64000.0,"size":27400000000.0,"peak":{"input":0.24,"cached":null,"output":null},"off":{"input":null,"cached":null,"output":null}},{"name":"mimo-v2.6-flash","url":"https://ollama.com/library/mimo-v2.6-flash","context":1000000.0,"size":161000000000.0,"peak":{"input":0.14,"cached":0.0028,"output":0.28},"off":{"input":null,"cached":null,"output":null}},{"name":"mimo-v2.6-pro","url":"https://ollama.com/library/mimo-v2.6-pro","context":1000000.0,"size":528000000000.0,"peak":{"input":0.435,"cached":0.0036,"output":0.87},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4.1-flash","url":"https://ollama.com/library/deepseek-v4.1-flash","context":1000000.0,"size":763000000000.0,"peak":{"input":0.3,"cached":0.006,"output":1.2},"off":{"input":0.15,"cached":0.003,"output":0.6}},{"name":"glm-5.3-flash","url":"https://ollama.com/library/glm-5.3-flash","context":1000000.0,"size":321000000000.0,"peak":{"input":0.15,"cached":0.03,"output":0.5},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.3","url":"https://ollama.com/library/glm-5.3","context":1000000.0,"size":753000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k3","url":"https://ollama.com/library/kimi-k3","context":1000000.0,"size":2810000000000.0,"peak":{"input":3.0,"cached":0.3,"output":15.0},"off":{"input":null,"cached":null,"output":null}},{"name":"glm-5.2","url":"https://ollama.com/library/glm-5.2","context":976000.0,"size":756000000000.0,"peak":{"input":1.4,"cached":0.26,"output":4.4},"off":{"input":null,"cached":null,"output":null}},{"name":"kimi-k2.7-code","url":"https://ollama.com/library/kimi-k2.7-code","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.19,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"nemotron-3-ultra","url":"https://ollama.com/library/nemotron-3-ultra","context":256000.0,"size":550000000000.0,"peak":{"input":0.1,"cached":0.1,"output":3.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m3","url":"https://ollama.com/library/minimax-m3","context":512000.0,"size":null,"peak":{"input":0.6,"cached":0.12,"output":2.4},"off":{"input":null,"cached":null,"output":null}},{"name":"deepseek-v4-pro","url":"https://ollama.com/library/deepseek-v4-pro","context":1000000.0,"size":1650000000000.0,"peak":{"input":1.32,"cached":0.044,"output":3.96},"off":{"input":0.66,"cached":0.022,"output":1.98}},{"name":"kimi-k2.6","url":"https://ollama.com/library/kimi-k2.6","context":256000.0,"size":1040000000000.0,"peak":{"input":0.95,"cached":0.16,"output":4.0},"off":{"input":null,"cached":null,"output":null}},{"name":"minimax-m2.7","url":"https://ollama.com/library/minimax-m2.7","context":200000.0,"size":229000000000.0,"peak":{"input":0.3,"cached":0.06,"output":1.2},"off":{"input":null,"cached":null,"output":null}},{"name":"gemma4","url":"https://ollama.com/library/gemma4","context":256000.0,"size":32700000000.000004,"peak":{"input":0.14,"cached":0.05,"output":0.4},"off":{"input":null,"cached":null,"output":null}}]</script>
 <script>
 const tbody = document.querySelector('#costs tbody');
 const rows = () => Array.from(tbody.querySelectorAll('tr'));
